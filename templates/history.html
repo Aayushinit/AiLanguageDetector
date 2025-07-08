@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="history-container">
+    <h2>Detection History</h2>
+    <div class="history-list">
+        {% for detection in history.items %}
+        <div class="history-item">
+            <span>{{ detection.timestamp.strftime('%Y-%m-%d %H:%M') }}</span>
+            <span>{{ detection.detected_language }} ({{ get_language_name(detection.detected_language) }})</span>
+            <span>{{ detection.text[:50] }}...</span>
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <p>No detection history found.</p>
+        </div>
+        {% endfor %}
+    </div>
+
+    {% if history.has_prev or history.has_next %}
+    <div class="pagination">
+        {% if history.has_prev %}
+        <a href="?page={{ history.prev_num }}" class="btn-secondary">Previous</a>
+        {% endif %}
+        {% if history.has_next %}
+        <a href="?page={{ history.next_num }}" class="btn-secondary">Next</a>
+        {% endif %}
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

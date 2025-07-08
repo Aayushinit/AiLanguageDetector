@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="detector-container">
+    <div class="card">
+        <h2>Detect Language</h2>
+        <textarea id="text-input" placeholder="Enter text to detect language..."></textarea>
+        <button onclick="detectLanguage()" class="btn-primary">Detect</button>
+        <div id="result" class="result-card hidden">
+            <h3>Detected Language:</h3>
+            <p id="language-result"></p>
+            <p id="confidence-result"></p>
+        </div>
+    </div>
+
+    {% if recent_history %}
+    <div class="history-section">
+        <h2>Recent Detections</h2>
+        <div class="history-list">
+            {% for detection in recent_history %}
+            <div class="history-item">
+                <span>{{ detection.timestamp.strftime('%Y-%m-%d %H:%M') }}</span>
+                <span>{{ detection.detected_language }} ({{ get_language_name(detection.detected_language) }})</span>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+<script>
+function detectLanguage() {
+    const text = document.getElementById('text-input').value;
+    fetch('/detect', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ text })
+    })
+    .then(response => response.json())
+    .then(data => {
+        const resultDiv = document.getElementById('result');
+        const languageResult = document.getElementById('language-result');
+        const confidenceResult = document.getElementById('confidence-result');
+        
+        if (data.error) {
+            languageResult.textContent = `Error: ${data.error}`;
+            confidenceResult.textContent = '';
+        } else {
+            languageResult.textContent = `${data.language_name} (${data.language})`;
+            confidenceResult.textContent = data.text;
+        }
+        
+        resultDiv.classList.remove('hidden');
+    })
+    .catch(error => console.error('Error:', error));
+}
+</script>
+{% endblock %}
