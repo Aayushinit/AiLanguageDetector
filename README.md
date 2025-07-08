@@ -1,93 +1,83 @@
-# 🤖 AI Background Subtractor
+# 🌐 Language Detector Web App
 
-> **Real-time background subtraction app using OpenCV and Flask. Watch your camera feed detect motion, shadows, and foreground objects with color-coded visualizations!**
+> **Detect the language of any text input instantly using Python, Flask, and LangDetect. Tracks detection history with a clean web UI and smart caching.**
+
+---
+<p align = "center" ><img src="Screenshot 2025-07-08 124108.png" width="100%">
+</p>
+## 📖 Overview
+
+**Language Detector** is a full-stack Flask web application that uses the `langdetect` library to detect the language of any given text. It includes:
+
+* 🧠 **Automatic Language Detection** using `langdetect`
+* 💾 **Detection History Tracking** with SQLite (via SQLAlchemy)
+* ⚡ **Smart Caching** for faster repeat detection
+* 🖥️ **Responsive Web Interface** with recent detection previews
+
+Built for fast prototyping, linguistic demos, and simple multi-language handling.
 
 ---
 
-## 🌟 Overview
+## ⚙️ Features
 
-**AI Background Subtractor** is a lightweight Flask-based web application that applies advanced background subtraction techniques (KNN and MOG2) to live camera feeds using **OpenCV**.
+### 🧠 Instant Language Detection
 
-The app displays real-time results, showing the original and processed frames side-by-side, where:
+* Uses `langdetect` to identify the language code (e.g., `en`, `fr`, `de`, `hi`)
+* Shows both code and full language name using `pycountry`
 
-* 🟩 **Green** areas represent detected foreground
-* 🟥 **Red** areas represent shadows
+### 💾 Recent Detection History
 
----
+* Displays last 5 detections on home page
+* View complete paginated history on `/history` page
 
-## 🧠 Key Features
+### 🚀 Fast Caching
 
-### 🎥 Live Camera Feed
+* Avoids repeated detection for same text using a TTL-based cache (5 minutes default)
 
-* Uses OpenCV to capture webcam input
-* Streams results in real-time to a Flask web interface
+### 🖥️ Clean Web Interface
 
-### 🧪 Background Subtraction Algorithms
-
-* Toggle between:
-
-  * `KNN` — K-Nearest Neighbors
-  * `MOG2` — Gaussian Mixture-based
-* Optionally display `GMG` (UI placeholder included)
-
-### 🌈 Visual Legend
-
-* Green for foreground (moving subjects)
-* Red for shadows
-
-### 💻 Modern Web UI
-
-* Built with Tailwind CSS and FontAwesome
-* Responsive layout with animation effects
-* Easy toggle buttons to switch between detection algorithms
+* Built with HTML/CSS and modular templates (using Jinja2)
+* Includes 404 and 500 error pages
 
 ---
 
 ## 🛠️ Technologies Used
 
-| Category        | Tech Stack                           |
-| --------------- | ------------------------------------ |
-| Backend         | Flask (Python)                       |
-| Computer Vision | OpenCV (cv2)                         |
-| Frontend        | HTML, Tailwind CSS, FontAwesome      |
-| Streaming       | MJPEG over HTTP (`video_feed` route) |
+| Category           | Tech Stack                        |
+| ------------------ | --------------------------------- |
+| Backend            | Flask (Python)                    |
+| Language Detection | langdetect, pycountry             |
+| Database           | SQLite + SQLAlchemy               |
+| Frontend           | HTML, CSS (custom), JS            |
+| Caching            | TTL-based manual Python decorator |
 
 ---
-
-## 📂 Project Structure
-
-```
-AiBackgroundSubtractor
-├── templates
-│   └── index.html         # Frontend UI
-└── app.py                 # Flask + OpenCV backend
-```
 
 ---
 
 ## 🔌 Flask Endpoints
 
-| Route                    | Description                                   |
-| ------------------------ | --------------------------------------------- |
-| `/`                      | Home page with video UI                       |
-| `/video_feed`            | Live video stream with background subtraction |
-| `/set_subtractor/<name>` | Switch between `KNN` and `MOG2` algorithms    |
+| Route      | Description                                    |
+| ---------- | ---------------------------------------------- |
+| `/`        | Home page with text input + recent detections  |
+| `/detect`  | API endpoint for POST-based language detection |
+| `/history` | Full history page with pagination              |
 
 ---
 
 ## 🚀 Getting Started
 
-1. **Clone the Repo**
+1. **Clone the Repository**
 
 ```bash
-git clone https://github.com/Aayushinit/AiBackgroundSubtractor.git
-cd AiBackgroundSubtractor
+git clone https://github.com/Aayushinit/LanguageDetectorApp.git
+cd LanguageDetectorApp
 ```
 
 2. **Install Dependencies**
 
 ```bash
-pip install flask opencv-python numpy
+pip install flask langdetect pycountry flask_sqlalchemy
 ```
 
 3. **Run the App**
@@ -96,35 +86,36 @@ pip install flask opencv-python numpy
 python app.py
 ```
 
-4. **Open in Browser**
-   Visit [http://localhost:5000](http://localhost:5000)
+4. **Visit in Browser**
+   [http://localhost:5000](http://localhost:5000)
 
 ---
 
-## 🧩 How It Works
+## 💡 How It Works
 
-* Reads frames from your webcam
-* Applies chosen background subtractor (KNN or MOG2)
-* Highlights foreground and shadows with colored masks
-* Combines original and masked frames side-by-side
-* Streams the result to browser via MJPEG
+* Accepts user text input from the frontend
+* `langdetect` attempts to detect language code
+* `pycountry` maps language code to human-readable name
+* Result is cached and also saved in the database
+* History is displayed and paginated with timestamps
 
 ---
 
-## 🧠 Future Enhancements
+## 🔮 Future Improvements
 
-* Add GMG and CNT subtractors
-* Allow uploading of videos instead of just webcam
-* Save snapshots or record processed output
-* Add sliders to tweak algorithm parameters (sensitivity, learning rate)
+* 🔤 Display detection confidence (if supported)
+* 🌍 Add language flag icons
+* 💬 Translate detected text
+* 💽 Export detection history as CSV
+* 📱 Mobile-optimized interface with Tailwind CSS
 
 ---
 
 ## 👨‍💻 Author
 
-**Aayush Kadam** — Final Year AI & ML Student | Passionate about AI + CV + Web
+**Aayush Kadam** — Final Year AI & ML Student | Python & Web Enthusiast
 
-> "Turning cameras into intelligent observers using just Python and Flask."
+> "Giving apps the power to understand language—one line at a time."
 
 [LinkedIn](https://www.linkedin.com/in/aayush-kadam-a3454a2b8) · [GitHub](https://github.com/Aayushinit)
 
@@ -132,7 +123,7 @@ python app.py
 
 ## ⭐️ Show Your Support
 
-If you found this project helpful or inspiring, please ⭐ the repo!
+If you find this project helpful, please ⭐ the repo and share with your network!
 
 ---
 
@@ -140,4 +131,4 @@ If you found this project helpful or inspiring, please ⭐ the repo!
 
 Licensed under the [MIT License](LICENSE).
 
-> All UI and logic created for demonstration and learning purposes.
+> UI and logic were developed for educational and demonstration purposes.
